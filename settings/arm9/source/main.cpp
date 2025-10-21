@@ -939,7 +939,25 @@ void opt_wifiLed_toggle(bool prev, bool next)
 
 void opt_powerLed_toggle(bool prev, bool next)
 {
-	*(u8*)(0x02FFFD02) = (next ? 0xFF : 0x00);
+	if (next == true) {
+		u8 batteryLevel = sys().batteryStatus();
+		if (batteryLevel & BIT(7)) {
+			*(u8*)(0x02FFFD02) = 0x02;
+		} else if (batteryLevel == 0xF) {
+			*(u8*)(0x02FFFD02) = 0xFF;
+		} else if (batteryLevel == 0xB) {
+			*(u8*)(0x02FFFD02) = 0xFF;
+		} else if (batteryLevel == 0x7) {
+			*(u8*)(0x02FFFD02) = 0xFF;
+		} else if (batteryLevel == 0x3 || batteryLevel == 0x1) {
+			*(u8*)(0x02FFFD02) = 0x02;
+		} else {
+			*(u8*)(0x02FFFD02) = 0x02;
+		}	
+	}	
+	else {
+		*(u8*)(0x02FFFD02) = 0x00;
+	}
 }
 
 /*void opt_twlFirm_changed(int prev, int next)
