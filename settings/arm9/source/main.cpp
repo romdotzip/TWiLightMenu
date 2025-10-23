@@ -709,22 +709,26 @@ void opt_update()
 			break;
 		}
 
-		// if Power LED is set to purple
-		if (&ms().powerLedColor == true) {
-			u8 batteryLevel = sys().batteryStatus();
-			if (batteryLevel & BIT(7)) {
-				*(u8*)(0x02FFFD02) = 0x02;
-			} else if (batteryLevel == 0xF) {
-				*(u8*)(0x02FFFD02) = 0xFF;
-			} else if (batteryLevel == 0xB) {
-				*(u8*)(0x02FFFD02) = 0xFF;
-			} else if (batteryLevel == 0x7) {
-				*(u8*)(0x02FFFD02) = 0xFF;
-			} else if (batteryLevel == 0x3 || batteryLevel == 0x1) {
-				*(u8*)(0x02FFFD02) = 0x02;
-			} else {
-				*(u8*)(0x02FFFD02) = 0x02;
-			}	
+		// if Power LED on DSi is set to purple
+		if (isDSiMode() && ms().consoleModel < 2) {
+			if (!sys().i2cBricked()) {
+				if (&ms().powerLedColor == true) {
+					u8 batteryLevel = sys().batteryStatus();
+					if (batteryLevel & BIT(7)) {
+						*(u8*)(0x02FFFD02) = 0x02;
+					} else if (batteryLevel == 0xF) {
+						*(u8*)(0x02FFFD02) = 0xFF;
+					} else if (batteryLevel == 0xB) {
+						*(u8*)(0x02FFFD02) = 0xFF;
+					} else if (batteryLevel == 0x7) {
+						*(u8*)(0x02FFFD02) = 0xFF;
+					} else if (batteryLevel == 0x3 || batteryLevel == 0x1) {
+						*(u8*)(0x02FFFD02) = 0x02;
+					} else {
+						*(u8*)(0x02FFFD02) = 0x02;
+					}	
+				}
+			}
 		}
 	}
 	clearText();
